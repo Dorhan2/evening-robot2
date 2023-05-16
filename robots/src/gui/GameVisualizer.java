@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 
 public class GameVisualizer extends JPanel
 {
+
     private final Timer m_timer = initTimer();
     
     private static Timer initTimer() 
@@ -63,24 +64,28 @@ public class GameVisualizer extends JPanel
         setDoubleBuffered(true);
     }
 
+    // установка новой позиции цели по координатам щелчка
     protected void setTargetPosition(Point p)
     {
         m_targetPositionX = p.x;
         m_targetPositionY = p.y;
     }
-    
+
+    // обработка перерисовки
     protected void onRedrawEvent()
     {
         EventQueue.invokeLater(this::repaint);
     }
 
+    //между двумя точками
     private static double distance(double x1, double y1, double x2, double y2)
     {
         double diffX = x1 - x2;
         double diffY = y1 - y2;
         return Math.sqrt(diffX * diffX + diffY * diffY);
     }
-    
+
+    // угол до цели от текущего положения робота
     private static double angleTo(double fromX, double fromY, double toX, double toY)
     {
         double diffX = toX - fromX;
@@ -120,31 +125,37 @@ public class GameVisualizer extends JPanel
             return max;
         return value;
     }
-    
+
+
+    // перемещение, направление, скорость
+    //обновление позиций
+    // + фикс границ
     private void moveRobot(double velocity, double angularVelocity, double duration)
     {
         velocity = applyLimits(velocity, 0, maxVelocity);
         angularVelocity = applyLimits(angularVelocity, -maxAngularVelocity, maxAngularVelocity);
-        double newX = m_robotPositionX + velocity / angularVelocity * 
-            (Math.sin(m_robotDirection  + angularVelocity * duration) -
-                Math.sin(m_robotDirection));
-        if (!Double.isFinite(newX))
-        {
-            newX = m_robotPositionX + velocity * duration * Math.cos(m_robotDirection);
+        // ( фиксим границы
+        double newX = m_robotPositionX + velocity / angularVelocity *
+                (Math.sin(m_robotDirection  + angularVelocity * duration) -
+                        Math.sin(m_robotDirection));
+        if (!Double.isFinite(newX) || newX < 0 || newX > getWidth()) {
+            newX = m_robotPositionX;
         }
-        double newY = m_robotPositionY - velocity / angularVelocity * 
-            (Math.cos(m_robotDirection  + angularVelocity * duration) -
-                Math.cos(m_robotDirection));
-        if (!Double.isFinite(newY))
-        {
-            newY = m_robotPositionY + velocity * duration * Math.sin(m_robotDirection);
+
+        double newY = m_robotPositionY - velocity / angularVelocity *
+                (Math.cos(m_robotDirection  + angularVelocity * duration) -
+                        Math.cos(m_robotDirection));
+        if (!Double.isFinite(newY) || newY < 0 || newY > getHeight()) {
+            newY = m_robotPositionY;
         }
+        // )
         m_robotPositionX = newX;
         m_robotPositionY = newY;
-        double newDirection = asNormalizedRadians(m_robotDirection + angularVelocity * duration); 
+        double newDirection = asNormalizedRadians(m_robotDirection + angularVelocity * duration);
         m_robotDirection = newDirection;
     }
 
+    //приведение
     private static double asNormalizedRadians(double angle)
     {
         while (angle < 0)
@@ -157,21 +168,23 @@ public class GameVisualizer extends JPanel
         }
         return angle;
     }
-    
+
+    //округление
     private static int round(double value)
     {
         return (int)(value + 0.5);
     }
-    
+
+
+    // рисовашки дальше
     @Override
-    public void paint(Graphics g)
-    {
+    public void paint(Graphics g) {
         super.paint(g);
-        Graphics2D g2d = (Graphics2D)g; 
+        Graphics2D g2d = (Graphics2D) g;
         drawRobot(g2d, round(m_robotPositionX), round(m_robotPositionY), m_robotDirection);
         drawTarget(g2d, m_targetPositionX, m_targetPositionY);
     }
-    
+
     private static void fillOval(Graphics g, int centerX, int centerY, int diam1, int diam2)
     {
         g.fillOval(centerX - diam1 / 2, centerY - diam2 / 2, diam1, diam2);
