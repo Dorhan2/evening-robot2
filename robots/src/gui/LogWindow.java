@@ -11,6 +11,10 @@ import log.LogChangeListener;
 import log.LogEntry;
 import log.LogWindowSource;
 
+import javax.swing.*;
+import javax.swing.event.InternalFrameAdapter;
+import javax.swing.event.InternalFrameEvent;
+
 public class LogWindow extends JInternalFrame implements LogChangeListener
 {
     private LogWindowSource m_logSource;
@@ -29,6 +33,21 @@ public class LogWindow extends JInternalFrame implements LogChangeListener
         getContentPane().add(panel);
         pack();
         updateLogContent();
+
+        //закрытие
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        addInternalFrameListener(new InternalFrameAdapter() {
+            @Override
+            public void internalFrameClosing(InternalFrameEvent e) {
+                handleWindowClosing();
+            }
+        });
+    }
+
+    private void handleWindowClosing() {
+        //закрытие
+        MainApplicationFrame mainFrame = (MainApplicationFrame) SwingUtilities.getWindowAncestor(this);
+        mainFrame.handleChildWindowClosing();
     }
 
     private void updateLogContent()
