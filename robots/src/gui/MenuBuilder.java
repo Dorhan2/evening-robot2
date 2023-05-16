@@ -1,11 +1,8 @@
 package gui;
 
 import java.awt.event.KeyEvent;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.*;
+
 import log.Logger;
 
 public class MenuBuilder {
@@ -18,8 +15,22 @@ public class MenuBuilder {
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(buildLookAndFeelMenu(frame));
         menuBar.add(buildTestMenu());
+        menuBar.add(buildExitMenu(frame)); // Добавляем пункт меню "Выйти"
         return menuBar;
     }
+
+    private static JMenuItem buildExitMenu(MainApplicationFrame frame) {
+        JMenuItem exitMenuItem = new JMenuItem("Выйти");
+        exitMenuItem.addActionListener(e -> {
+            int result = JOptionPane.showConfirmDialog(frame, "Вы действительно хотите выйти из приложения?", "Подтверждение закрытия", JOptionPane.YES_NO_OPTION);
+            if (result == JOptionPane.YES_OPTION) {
+
+                System.exit(0);
+            }
+        });
+        return exitMenuItem;
+    }
+
 
     private static JMenu buildLookAndFeelMenu(MainApplicationFrame frame) {
         JMenu lookAndFeelMenu = new JMenu("Режим отображения");
