@@ -2,20 +2,22 @@ package gui;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
-import javax.swing.JDesktopPane;
-import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
-import javax.swing.JMenuBar;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.*;
 
 import log.Logger;
 
 public class MainApplicationFrame extends JFrame {
+
+    public JInternalFrame[] getInternalFrames() {
+        return desktopPane.getAllFrames();
+    }
+
     private final JDesktopPane desktopPane = new JDesktopPane();
+    //для закрытия
+    private int childFramesCount = 0;
 
     public MainApplicationFrame() {
         int inset = 50;
@@ -24,16 +26,60 @@ public class MainApplicationFrame extends JFrame {
 
         setContentPane(desktopPane);
 
-        LogWindow logWindow = createLogWindow();
-        addWindow(logWindow);
+        //LogWindow logWindow = createLogWindow();
+        //addWindow(logWindow);
 
         GameWindow gameWindow = new GameWindow();
         gameWindow.setSize(400, 400);
         addWindow(gameWindow);
 
         setJMenuBar(MenuBuilder.buildMenuBar(this));
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                handleWindowClosing();
+            }
+        });
+
+        // Проверяем наличие сохраненных состояний окон
+        if (WindowStateManager.hasSavedWindowStates()) {
+            int result = JOptionPane.showConfirmDialog(this, "Найдено сохраненное состояние окон. Хотите восстановить?", "Восстановление окон", JOptionPane.YES_NO_OPTION);
+            if (result == JOptionPane.YES_OPTION) {
+                WindowStateManager.restoreWindowStates(this);
+            }
+        }
+
     }
+
+    //для закрытия глав окна
+    private void handleWindowClosing() {
+        int result = JOptionPane.showConfirmDialog(this, "Вы действительно хотите выйти из приложения?", "Подтверждение закрытия", JOptionPane.YES_NO_OPTION);
+        if (result == JOptionPane.YES_OPTION) {
+            // Сохраняем состояния окон перед выходом
+            WindowStateManager.saveWindowStates(this);
+            System.exit(0);
+        }
+    }
+
+    //для закрытия
+    public void handleChildWindowClosing() {
+        int result = JOptionPane.showConfirmDialog(this, "Вы действительно хотите закрыть окно?", "Подтверждение закрытия", JOptionPane.YES_NO_OPTION);
+        if (result == JOptionPane.YES_OPTION) {
+            JInternalFrame[] childFrames = desktopPane.getAllFrames();
+            for (JInternalFrame frame : childFrames) {
+                if (frame.isClosable()) {
+                    frame.dispose();
+                }
+            }
+            if (--childFramesCount == 0) {
+                setVisible(false);
+            }
+        }
+    }
+
+
 
     protected LogWindow createLogWindow() {
         LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource());
@@ -48,6 +94,7 @@ public class MainApplicationFrame extends JFrame {
     protected void addWindow(JInternalFrame frame) {
         desktopPane.add(frame);
         frame.setVisible(true);
+        childFramesCount++;
     }
 
     private void setLookAndFeel(String className) {
