@@ -26,8 +26,8 @@ public class MainApplicationFrame extends JFrame {
 
         setContentPane(desktopPane);
 
-        //LogWindow logWindow = createLogWindow();
-        //addWindow(logWindow);
+//        LogWindow logWindow = createLogWindow();
+//        addWindow(logWindow);
 
         GameWindow gameWindow = new GameWindow();
         gameWindow.setSize(400, 400);
