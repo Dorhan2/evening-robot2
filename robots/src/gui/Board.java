@@ -10,8 +10,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -29,20 +32,7 @@ public class Board extends JPanel implements ActionListener{
     private final int B_WIDTH = 400;
     private final int B_HEIGHT = 300;
     private final int DELAY = 15;
-    private final int[][] pos = {
-            {0, SIZE_BOX*8}, {SIZE_BOX, SIZE_BOX*8}, {SIZE_BOX*2, SIZE_BOX*8},
-            {SIZE_BOX*3, SIZE_BOX*8}, {SIZE_BOX*4, SIZE_BOX*8}, {SIZE_BOX*5, SIZE_BOX*8},
-            {SIZE_BOX*6, SIZE_BOX*8}, {SIZE_BOX*7, SIZE_BOX*8}, {SIZE_BOX*8, SIZE_BOX*8},//нижние
-
-//            {-20, 20}, {-20, 60}, {-20, 100},
-//            {-20, 140}, {-20, 180}, {-20, 220},
-//            {-20, 260}, {-20, 300}, {-20, 340},
-
-            {SIZE_BOX*8, 0}, {SIZE_BOX*8, SIZE_BOX}, {SIZE_BOX*8, SIZE_BOX*2},
-            {SIZE_BOX*8, SIZE_BOX*3}, {SIZE_BOX*8, SIZE_BOX*4}, {SIZE_BOX*8, SIZE_BOX*5},//боковые
-            {SIZE_BOX*8, SIZE_BOX*6}, {SIZE_BOX*8, SIZE_BOX*7}, {SIZE_BOX*8, SIZE_BOX*8}
-    };
-
+    private int[][] pos;
 
 
     public Board() {
@@ -72,6 +62,39 @@ public class Board extends JPanel implements ActionListener{
     }
 
     public void initBox() {
+        File file = new File("C:\\Users\\USER\\IdeaProjects\\evening-robot2\\robots\\src\\gui\\level.txt");
+        Scanner s = null;
+        try {
+            s = new Scanner(file).useDelimiter("\\Z");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        assert s != null;
+        String contents = s.next();
+        System.out.println("level: "+contents);
+        if (Integer.parseInt(contents) == 1){
+            pos = new int[][]{
+                    {0, SIZE_BOX*8}, {SIZE_BOX, SIZE_BOX*8}, {SIZE_BOX*2, SIZE_BOX*8},
+                    {SIZE_BOX*3, SIZE_BOX*8}, {SIZE_BOX*4, SIZE_BOX*8}, {SIZE_BOX*5, SIZE_BOX*8},
+                    {SIZE_BOX*6, SIZE_BOX*8}, {SIZE_BOX*7, SIZE_BOX*8}, {SIZE_BOX*8, SIZE_BOX*8},//нижние
+
+                    {SIZE_BOX*8, 0}, {SIZE_BOX*8, SIZE_BOX}, {SIZE_BOX*8, SIZE_BOX*2},
+                    {SIZE_BOX*8, SIZE_BOX*3}, {SIZE_BOX*8, SIZE_BOX*4}, {SIZE_BOX*8, SIZE_BOX*5},//боковые
+                    {SIZE_BOX*8, SIZE_BOX*6}, {SIZE_BOX*8, SIZE_BOX*7}, {SIZE_BOX*8, SIZE_BOX*8}
+            };
+        }
+        else if (Integer.parseInt(contents) == 2){
+            pos = new int[][]{
+                    {0, SIZE_BOX * 11}, {SIZE_BOX, SIZE_BOX * 11}, {SIZE_BOX * 2, SIZE_BOX * 11},
+                    {SIZE_BOX * 3, SIZE_BOX * 11}, {SIZE_BOX * 4, SIZE_BOX * 11}, {SIZE_BOX * 5, SIZE_BOX * 11},
+                    {SIZE_BOX * 6, SIZE_BOX * 11}, {SIZE_BOX * 7, SIZE_BOX * 11}, {SIZE_BOX * 8, SIZE_BOX * 11},//нижние
+
+                    {SIZE_BOX * 8, 0}, {SIZE_BOX * 8, SIZE_BOX}, {SIZE_BOX * 8, SIZE_BOX * 2},
+                    {SIZE_BOX * 8, SIZE_BOX * 3}, {SIZE_BOX * 8, SIZE_BOX * 4}, {SIZE_BOX * 8, SIZE_BOX * 5},//боковые
+                    {SIZE_BOX * 8, SIZE_BOX * 6}, {SIZE_BOX * 8, SIZE_BOX * 7}, {SIZE_BOX * 8, SIZE_BOX * 8},
+                    {SIZE_BOX * 8, SIZE_BOX * 9}, {SIZE_BOX * 8, SIZE_BOX * 10}, {SIZE_BOX * 8, SIZE_BOX * 11},
+            };
+        }
 
         boxs = new ArrayList<>();
 //        int count = 0;
@@ -116,7 +139,7 @@ public class Board extends JPanel implements ActionListener{
 
 //        updateBox();
 
-        checkCollisions();
+        checkCollisions(player);
 
         repaint();
     }
@@ -137,10 +160,9 @@ public class Board extends JPanel implements ActionListener{
 //    private void updateBox() {
 //    }
 
-    public void checkCollisions() {
+    public void checkCollisions(Sprite unit) {
 
-        Rectangle r3 = player.getBounds();
-
+        Rectangle r3 = unit.getBounds();
         for (Box box : boxs) {
 
             Rectangle r2 = box.getBounds();

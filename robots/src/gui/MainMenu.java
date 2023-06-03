@@ -4,6 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -47,12 +51,48 @@ public class MainMenu extends JFrame {
         JMenu languageMenu = createLanguageMenu();
         menuBar.add(languageMenu);
 
+        JMenu levelMenu = createLevelMenu();
+        menuBar.add(levelMenu);
+
         setJMenuBar(menuBar);
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation(screenSize.width / 2 - getWidth() / 2, screenSize.height / 2 - getHeight() / 2);
 
         setLanguage("en");
+    }
+    private JMenu createLevelMenu() {
+        JMenu LevelMenu = new JMenu(getLocalizedString("Plan"));
+
+        JMenuItem One = new JMenuItem(getLocalizedString("1"));
+        JMenuItem Two = new JMenuItem(getLocalizedString("2"));
+
+        One.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    Files.writeString(Paths.get("C:\\Users\\USER\\IdeaProjects\\evening-robot2\\robots\\src\\gui\\level.txt"), "1", StandardOpenOption.TRUNCATE_EXISTING);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        Two.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    Files.writeString(Paths.get("C:\\Users\\USER\\IdeaProjects\\evening-robot2\\robots\\src\\gui\\level.txt"), "2", StandardOpenOption.TRUNCATE_EXISTING);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        LevelMenu.add(One);
+        LevelMenu.add(Two);
+
+        return LevelMenu;
     }
 
     private JMenu createLanguageMenu() {
@@ -127,7 +167,6 @@ public class MainMenu extends JFrame {
             }
         });
     }
-
     private String getLocalizedString(String key) {
         try {
             return resourceBundle.getString(key);

@@ -52,7 +52,6 @@ public class Player extends Sprite {
         y += dy;
     }
     public void noMoveToRight(boolean coll){
-
         right = coll;
 //        right = true;
     }
