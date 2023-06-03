@@ -50,7 +50,7 @@ public class MainApplicationFrame extends JFrame {
         setContentPane(desktopPane);
 
         // Локализация
-        showLanguageDialog();
+        selectedLanguage = LanguageSettings.getLanguage();
         setLanguage();
 
         logWindow = createLogWindow();
@@ -134,20 +134,14 @@ public class MainApplicationFrame extends JFrame {
     private void setLanguage() {
         Locale locale = Locale.getDefault();
 
-        if (selectedLanguage.equals("English")) {
-            locale = new Locale("en", "US");
-        } else if (selectedLanguage.equals("Deutsch")) {
-            locale = new Locale("de", "DE");
+        if (selectedLanguage != null) {
+            if (selectedLanguage.equals("English")) {
+                locale = new Locale("en", "US");
+            } else if (selectedLanguage.equals("Deutsch")) {
+                locale = new Locale("de", "DE");
+            }
         }
 
         messages = ResourceBundle.getBundle("gui.lang.lang", locale);
-    }
-
-    private void showLanguageDialog() {
-        String[] languages = { "English", "Deutsch" };
-        selectedLanguage = (String) JOptionPane.showInputDialog(this, "Select Language", "Language Selection", JOptionPane.PLAIN_MESSAGE, null, languages, languages[0]);
-        if (selectedLanguage != null) {
-            setLanguage();
-        }
     }
 }

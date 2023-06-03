@@ -21,12 +21,16 @@ public class MainMenu extends JFrame {
     private ResourceBundle resourceBundle;
 
     public MainMenu() {
+
+
         setTitle("Меню");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(300, 200);
 
         JMenuBar menuBar = new JMenuBar();
         gameMenu = new JMenu(getLocalizedString("gameMenu"));
+
+
 
         startGameItem = new JMenuItem(getLocalizedString("startGameItem"));
         startGameItem.addActionListener(new ActionListener() {
@@ -59,40 +63,46 @@ public class MainMenu extends JFrame {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation(screenSize.width / 2 - getWidth() / 2, screenSize.height / 2 - getHeight() / 2);
 
-        setLanguage("en");
+
+        setLanguage("English");
+        setLanguage(LanguageSettings.getLanguage());
+
+
+
     }
+
     private JMenu createLevelMenu() {
-        JMenu LevelMenu = new JMenu(getLocalizedString("Plan"));
+        JMenu levelMenu = new JMenu(getLocalizedString("Plan"));
 
-        JMenuItem One = new JMenuItem(getLocalizedString("1"));
-        JMenuItem Two = new JMenuItem(getLocalizedString("2"));
+        JMenuItem one = new JMenuItem(getLocalizedString("1"));
+        JMenuItem two = new JMenuItem(getLocalizedString("2"));
 
-        One.addActionListener(new ActionListener() {
+        one.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    Files.writeString(Paths.get("C:\\Users\\USER\\IdeaProjects\\evening-robot2\\robots\\src\\gui\\level.txt"), "1", StandardOpenOption.TRUNCATE_EXISTING);
+                    Files.writeString(Paths.get("C:\\.2021 КН\\jaba\\qwer\\robots\\src\\gui\\level.txt"), "1", StandardOpenOption.TRUNCATE_EXISTING);
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
             }
         });
 
-        Two.addActionListener(new ActionListener() {
+        two.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    Files.writeString(Paths.get("C:\\Users\\USER\\IdeaProjects\\evening-robot2\\robots\\src\\gui\\level.txt"), "2", StandardOpenOption.TRUNCATE_EXISTING);
+                    Files.writeString(Paths.get("C:\\.2021 КН\\jaba\\qwer\\robots\\src\\gui\\level.txt"), "2", StandardOpenOption.TRUNCATE_EXISTING);
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
             }
         });
 
-        LevelMenu.add(One);
-        LevelMenu.add(Two);
+        levelMenu.add(one);
+        levelMenu.add(two);
 
-        return LevelMenu;
+        return levelMenu;
     }
 
     private JMenu createLanguageMenu() {
@@ -115,27 +125,31 @@ public class MainMenu extends JFrame {
         String selectedLanguage = (String) JOptionPane.showInputDialog(this, "Select Language", "Language Selection", JOptionPane.PLAIN_MESSAGE, null, languages, languages[0]);
         if (selectedLanguage != null) {
             setLanguage(selectedLanguage);
+            LanguageSettings.setLanguage(selectedLanguage);
         }
     }
 
     private void setLanguage(String language) {
-        Locale locale = Locale.getDefault();
-
+        Locale locale;
         if (language.equals("English")) {
             locale = new Locale("en", "US");
         } else if (language.equals("Deutsch")) {
             locale = new Locale("ru", "RU");
+        } else {
+            // Default language if the selected language is not recognized
+            locale = new Locale("en", "US");
         }
 
         resourceBundle = ResourceBundle.getBundle("gui.lang.lang", locale);
 
-        // Обновление текстовых элементов на основе выбранного языка
+        // Update the text elements based on the selected language
         setTitle(getLocalizedString("menuTitle"));
         gameMenu.setText(getLocalizedString("gameMenu"));
         startGameItem.setText(getLocalizedString("startGameItem"));
         exitItem.setText(getLocalizedString("exitItem"));
-        // Дополнительные обновления текстовых элементов
+        // Additional updates to text elements
     }
+
 
     private void startGame() {
         SwingUtilities.invokeLater(new Runnable() {
@@ -167,6 +181,7 @@ public class MainMenu extends JFrame {
             }
         });
     }
+
     private String getLocalizedString(String key) {
         try {
             return resourceBundle.getString(key);
