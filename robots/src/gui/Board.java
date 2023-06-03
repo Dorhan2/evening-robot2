@@ -1,8 +1,5 @@
 package gui;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
@@ -187,19 +184,19 @@ public class Board extends JPanel implements ActionListener{
             }
             else if (r3.intersects(r2) && weightR2 < player.getWeight()) {
                 if (r2.getX()-SIZE_PLAYER+1 >= r3.getX()){//слева
-                    CollisionBoxs(box);
+                    collisionBoxs(box);
                     box.x += 1;
                 }
                 else if (r2.getX()+SIZE_PLAYER <= r3.getX()){//справа
-                    CollisionBoxs(box);
+                    collisionBoxs(box);
                     box.x -= 1;
                 }
                 else if (r2.getY() > r3.getY()){//сверху
-                    CollisionBoxs(box);
+                    collisionBoxs(box);
                     box.y += 1;
                 }
                 else if (r2.getY() < r3.getY()){//снизу
-                    CollisionBoxs(box);
+                    collisionBoxs(box);
                     box.y -= 1;
                 }
             }
@@ -211,7 +208,8 @@ public class Board extends JPanel implements ActionListener{
             }
         }
     }
-    public void CollisionBoxs(Box moveBox){
+
+    public void collisionBoxs(Box moveBox){
         Rectangle r3 = moveBox.getBounds();
         for (Box box : boxs) {
             if (box != moveBox){
