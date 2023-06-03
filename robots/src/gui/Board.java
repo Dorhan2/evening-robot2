@@ -139,7 +139,7 @@ public class Board extends JPanel implements ActionListener{
 
 //        updateBox();
 
-        checkCollisions(player);
+        checkCollisions();
 
         repaint();
     }
@@ -160,9 +160,9 @@ public class Board extends JPanel implements ActionListener{
 //    private void updateBox() {
 //    }
 
-    public void checkCollisions(Sprite unit) {
+    public void checkCollisions() {
 
-        Rectangle r3 = unit.getBounds();
+        Rectangle r3 = player.getBounds();
         for (Box box : boxs) {
 
             Rectangle r2 = box.getBounds();
@@ -184,31 +184,22 @@ public class Board extends JPanel implements ActionListener{
 //                    box.y -= 1;
                     player.noMoveToUp(true);
                 }
-//                if (r2.getY() >= player.getY()){
-//                player.noMoveY(true);
-//                }
-//                else if (r2.getX() <= player.getX()){
-//                    player.noMoveX(true);
-//                }
-
-//                if (weightR2 == 1){
-//                    player.noMoveY(true);
-//                }
-//                if (weightR2 == 0){
-//                    player.noMoveX(true);
-//                }
             }
             else if (r3.intersects(r2) && weightR2 < player.getWeight()) {
                 if (r2.getX()-SIZE_PLAYER+1 >= r3.getX()){//слева
+                    CollisionBoxs(box);
                     box.x += 1;
                 }
                 else if (r2.getX()+SIZE_PLAYER <= r3.getX()){//справа
+                    CollisionBoxs(box);
                     box.x -= 1;
                 }
                 else if (r2.getY() > r3.getY()){//сверху
+                    CollisionBoxs(box);
                     box.y += 1;
                 }
                 else if (r2.getY() < r3.getY()){//снизу
+                    CollisionBoxs(box);
                     box.y -= 1;
                 }
             }
@@ -218,6 +209,33 @@ public class Board extends JPanel implements ActionListener{
                 player.noMoveToRight(false);
                 player.noMoveToLeft(false);
             }
+        }
+    }
+    public void CollisionBoxs(Box moveBox){
+        Rectangle r3 = moveBox.getBounds();
+        for (Box box : boxs) {
+            if (box != moveBox){
+                Rectangle r2 = box.getBounds();
+                if (r3.intersects(r2)){
+                    if (r2.getX()-SIZE_BOX+1 >= r3.getX()){//слева
+//                    box.x += 1;
+                        player.noMoveToRight(true);
+                    }
+                    else if (r2.getX()+SIZE_BOX <= r3.getX()){//справа
+//                    box.x -= 1;
+                        player.noMoveToLeft(true);
+                    }
+                    else if (r2.getY() > r3.getY()){//сверху
+//                    box.y += 1;
+                        player.noMoveToDown(true);
+                    }
+                    else if (r2.getY() < r3.getY()){//снизу
+//                    box.y -= 1;
+                        player.noMoveToUp(true);
+                    }
+                }
+            }
+
         }
     }
 
