@@ -19,6 +19,7 @@ public class MainApplicationFrame extends JFrame {
     private GameWindow gameWindow;
     private int childFramesCount = 0;
     private ResourceBundle messages;
+    private String selectedLanguage;
 
     public JInternalFrame[] getInternalFrames() {
         return desktopPane.getAllFrames();
@@ -49,8 +50,8 @@ public class MainApplicationFrame extends JFrame {
         setContentPane(desktopPane);
 
         // Локализация
-        Locale currentLocale = Locale.getDefault();
-        messages = ResourceBundle.getBundle("gui.lang.lang", currentLocale);
+        showLanguageDialog();
+        setLanguage();
 
         logWindow = createLogWindow();
         logWindow.setName("logWindow");
@@ -130,13 +131,23 @@ public class MainApplicationFrame extends JFrame {
         childFramesCount++;
     }
 
-    private void setLookAndFeel(String className) {
-        try {
-            UIManager.setLookAndFeel(className);
-            SwingUtilities.updateComponentTreeUI(this);
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException
-                | UnsupportedLookAndFeelException e) {
-            // just ignore
+    private void setLanguage() {
+        Locale locale = Locale.getDefault();
+
+        if (selectedLanguage.equals("English")) {
+            locale = new Locale("en", "US");
+        } else if (selectedLanguage.equals("Deutsch")) {
+            locale = new Locale("de", "DE");
+        }
+
+        messages = ResourceBundle.getBundle("gui.lang.lang", locale);
+    }
+
+    private void showLanguageDialog() {
+        String[] languages = { "English", "Deutsch" };
+        selectedLanguage = (String) JOptionPane.showInputDialog(this, "Select Language", "Language Selection", JOptionPane.PLAIN_MESSAGE, null, languages, languages[0]);
+        if (selectedLanguage != null) {
+            setLanguage();
         }
     }
 }
