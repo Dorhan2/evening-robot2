@@ -1,11 +1,9 @@
 package gui;
 
 import javax.swing.JPanel;
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.Dimension;
 
 import java.util.HashMap;
 import java.util.Vector;
@@ -74,29 +72,5 @@ public class Sokobana extends JPanel {
         g.fillRect(PANEL_WIDTH, 0, 10, PANEL_HEIGHT);
         g.fillRect(0, PANEL_HEIGHT, PANEL_WIDTH + 10, 10);
     }
-//    public boolean AABBvsAABB(AABB a, AABB b ){
-//        // Выходим без пересечения, потому что найдена разделяющая ось
-//        if (a.max.x < b.min.x or a.min.x > b.max.x) return false;
-//        if(a.max.y < b.min.y or a.min.y > b.max.y) return false;
-//
-//        // Разделяющая ось не найдена, поэтому существует по крайней мере одна пересекающая ось
-//        return true
-//    }
 }
 
-
-
-
-
-//    class AABB {
-//        Vector min;
-//        Vector max;
-//        };
-//
-//
-//    class Manifold{
-//        Object A;
-//        Object B;
-//        float penetration;
-//        Vector normal;
-//        };

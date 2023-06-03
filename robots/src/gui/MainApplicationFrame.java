@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.beans.PropertyVetoException;
 
 import javax.swing.*;
 
@@ -16,8 +17,27 @@ public class MainApplicationFrame extends JFrame {
     }
 
     private final JDesktopPane desktopPane = new JDesktopPane();
+    private LogWindow logWindow;
+    private GameWindow gameWindow;
     //для закрытия
     private int childFramesCount = 0;
+
+    public LogWindow getLogWindow() {
+        return logWindow;
+    }
+
+    public GameWindow getGameWindow() {
+        return gameWindow;
+    }
+
+    public JInternalFrame getWindowById(String windowId) {
+        for (JInternalFrame window : desktopPane.getAllFrames()) {
+            if (window.getName().equals(windowId)) {
+                return window;
+            }
+        }
+        return null;
+    }
 
     public MainApplicationFrame() {
         int inset = 50;
@@ -26,10 +46,12 @@ public class MainApplicationFrame extends JFrame {
 
         setContentPane(desktopPane);
 
-//        LogWindow logWindow = createLogWindow();
-//        addWindow(logWindow);
+        logWindow = createLogWindow();
+        logWindow.setName("logWindow");
+        addWindow(logWindow);
 
-        GameWindow gameWindow = new GameWindow();
+        gameWindow = new GameWindow();
+        gameWindow.setName("gameWindow");
         gameWindow.setSize(400, 400);
         addWindow(gameWindow);
 
@@ -44,10 +66,17 @@ public class MainApplicationFrame extends JFrame {
         });
 
         // Проверяем наличие сохраненных состояний окон
-        if (WindowStateManager.hasSavedWindowStates()) {
-            int result = JOptionPane.showConfirmDialog(this, "Найдено сохраненное состояние окон. Хотите восстановить?", "Восстановление окон", JOptionPane.YES_NO_OPTION);
+        if (WindowStateManager.hasSavedWindowState("logWindow")) {
+            int result = JOptionPane.showConfirmDialog(this, "Найдено сохраненное состояние окна логов. Хотите восстановить?", "Восстановление окна логов", JOptionPane.YES_NO_OPTION);
             if (result == JOptionPane.YES_OPTION) {
-                WindowStateManager.restoreWindowStates(this);
+                restoreWindowState("logWindow", logWindow);
+            }
+        }
+
+        if (WindowStateManager.hasSavedWindowState("gameWindow")) {
+            int result = JOptionPane.showConfirmDialog(this, "Найдено сохраненное состояние игрового окна. Хотите восстановить?", "Восстановление игрового окна", JOptionPane.YES_NO_OPTION);
+            if (result == JOptionPane.YES_OPTION) {
+                restoreWindowState("gameWindow", gameWindow);
             }
         }
 
@@ -58,10 +87,12 @@ public class MainApplicationFrame extends JFrame {
         int result = JOptionPane.showConfirmDialog(this, "Вы действительно хотите выйти из приложения?", "Подтверждение закрытия", JOptionPane.YES_NO_OPTION);
         if (result == JOptionPane.YES_OPTION) {
             // Сохраняем состояния окон перед выходом
-            WindowStateManager.saveWindowStates(this);
+            WindowStateManager.saveWindowState("logWindow", logWindow.getLocation(), logWindow.getSize(), logWindow.isMaximum(), logWindow.isIcon());
+            WindowStateManager.saveWindowState("gameWindow", gameWindow.getLocation(), gameWindow.getSize(), gameWindow.isMaximum(), gameWindow.isIcon());
             System.exit(0);
         }
     }
+
 
     //для закрытия
     public void handleChildWindowClosing() {
@@ -81,6 +112,9 @@ public class MainApplicationFrame extends JFrame {
 
 
 
+    private void restoreWindowState(String windowId, JInternalFrame window) {
+        WindowStateManager.restoreWindowState(windowId, this);
+    }
     protected LogWindow createLogWindow() {
         LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource());
         logWindow.setLocation(10, 10);
@@ -102,7 +136,7 @@ public class MainApplicationFrame extends JFrame {
             UIManager.setLookAndFeel(className);
             SwingUtilities.updateComponentTreeUI(this);
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException
-                 | UnsupportedLookAndFeelException e) {
+                | UnsupportedLookAndFeelException e) {
             // just ignore
         }
     }
