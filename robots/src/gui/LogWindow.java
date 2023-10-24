@@ -22,7 +22,7 @@ public class LogWindow extends JInternalFrame implements LogChangeListener
 
     public LogWindow(LogWindowSource logSource) 
     {
-        super("Arbeits protokoll", true, true, true, true);
+        super("Log", true, true, true, true);
         m_logSource = logSource;
         m_logSource.registerListener(this);
         m_logContent = new TextArea("");

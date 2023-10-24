@@ -2,12 +2,14 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.event.WindowEvent;
-
+import java.io.FileReader;
+import java.io.Reader;
 import javax.swing.*;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 
 import static gui.ConfirmationDialog.showConfirmationDialog;
+
 
 public class GameWindow extends JInternalFrame
 {
@@ -15,7 +17,7 @@ public class GameWindow extends JInternalFrame
     private final Board m_visualizer;
     public GameWindow() 
     {
-        super("Spielfeld", true, true, true, true);
+        super("Menu", true, true, true, true);
 //        m_visualizer = new Sokobana();
         m_visualizer = new Board();
         JPanel panel = new JPanel(new BorderLayout());

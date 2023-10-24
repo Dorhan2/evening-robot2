@@ -16,8 +16,8 @@ public class MainMenu extends JFrame {
     private JMenu gameMenu;
     private JMenuItem startGameItem;
     private JMenuItem exitItem;
-    private JComboBox<String> languageComboBox;
-
+    private JMenu languageMenu;
+    private JMenuItem languageItem;
     private ResourceBundle resourceBundle;
 
     public MainMenu() {
@@ -52,7 +52,7 @@ public class MainMenu extends JFrame {
 
         menuBar.add(gameMenu);
 
-        JMenu languageMenu = createLanguageMenu();
+        languageMenu = createLanguageMenu();
         menuBar.add(languageMenu);
 
         JMenu levelMenu = createLevelMenu();
@@ -108,7 +108,7 @@ public class MainMenu extends JFrame {
     private JMenu createLanguageMenu() {
         JMenu languageMenu = new JMenu(getLocalizedString("languageMenu"));
 
-        JMenuItem languageItem = new JMenuItem(getLocalizedString("languageItem"));
+        languageItem = new JMenuItem(getLocalizedString("languageItem"));
         languageItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -116,7 +116,6 @@ public class MainMenu extends JFrame {
             }
         });
         languageMenu.add(languageItem);
-
         return languageMenu;
     }
 
@@ -147,6 +146,8 @@ public class MainMenu extends JFrame {
         gameMenu.setText(getLocalizedString("gameMenu"));
         startGameItem.setText(getLocalizedString("startGameItem"));
         exitItem.setText(getLocalizedString("exitItem"));
+        languageMenu.setText(getLocalizedString("languageMenu"));
+        languageItem.setText(getLocalizedString("languageItem"));
         // Additional updates to text elements
     }
 
@@ -182,7 +183,7 @@ public class MainMenu extends JFrame {
         });
     }
 
-    private String getLocalizedString(String key) {
+    public String getLocalizedString(String key) {
         try {
             return resourceBundle.getString(key);
         } catch (Exception e) {

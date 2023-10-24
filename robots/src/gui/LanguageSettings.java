@@ -7,7 +7,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
 public class LanguageSettings {
-    private static final String LANGUAGE_FILE_PATH = "language.txt";
+    private static final String LANGUAGE_FILE_PATH = "C:\\Users\\USER\\IdeaProjects\\evening-robot2\\robots\\src\\gui\\language.txt";
 
     public static void setLanguage(String language) {
         try {
