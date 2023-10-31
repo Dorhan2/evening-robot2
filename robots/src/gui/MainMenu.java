@@ -136,7 +136,7 @@ public class MainMenu extends JFrame {
         int menuLanguage = JOptionPane.showOptionDialog(this, selectedLanguage, languageSelection, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,  null, buttons, buttons[0]);
 
 
-        if (selectedLanguage.getSelectedItem() != null) {
+        if (selectedLanguage.getSelectedItem() != null && menuLanguage == 0) {
             setLanguage((String) selectedLanguage.getSelectedItem());
             LanguageSettings.setLanguage((String) selectedLanguage.getSelectedItem());
         }
