@@ -14,12 +14,16 @@ import log.Logger;
 
 public class MainApplicationFrame extends JFrame {
 
+
     private final JDesktopPane desktopPane = new JDesktopPane();
     private LogWindow logWindow;
     private GameWindow gameWindow;
     private int childFramesCount = 0;
     private ResourceBundle messages;
     private String selectedLanguage;
+//    private String cancelButton;
+//    private String yesButton;
+//    private String[] buttons;
 
     public JInternalFrame[] getInternalFrames() {
         return desktopPane.getAllFrames();
@@ -89,7 +93,10 @@ public class MainApplicationFrame extends JFrame {
     }
 
     private void handleWindowClosing() {
-        int result = JOptionPane.showConfirmDialog(this, messages.getString("exitConfirmationMessage"), messages.getString("exitConfirmationTitle"), JOptionPane.YES_NO_OPTION);
+        String yesButton = messages.getString("Yes");
+        String cancelButton = messages.getString("Cancel");
+        String[] buttons = new String[]{yesButton, cancelButton};
+        int result = JOptionPane.showOptionDialog(this, messages.getString("exitConfirmationMessage"), messages.getString("exitConfirmationTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
         if (result == JOptionPane.YES_OPTION) {
             WindowStateManager.saveWindowState("logWindow", logWindow.getLocation(), logWindow.getSize(), logWindow.isMaximum(), logWindow.isIcon());
             WindowStateManager.saveWindowState("gameWindow", gameWindow.getLocation(), gameWindow.getSize(), gameWindow.isMaximum(), gameWindow.isIcon());
@@ -98,7 +105,10 @@ public class MainApplicationFrame extends JFrame {
     }
 
     public void handleChildWindowClosing() {
-        int result = JOptionPane.showConfirmDialog(this, messages.getString("closeChildWindowConfirmationMessage"), messages.getString("closeChildWindowConfirmationTitle"), JOptionPane.YES_NO_OPTION);
+        String yesButton = messages.getString("Yes");
+        String cancelButton = messages.getString("Cancel");
+        String[] buttons = new String[]{yesButton, cancelButton};
+        int result = JOptionPane.showOptionDialog(this, messages.getString("closeChildWindowConfirmationMessage"), messages.getString("closeChildWindowConfirmationTitle"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
         if (result == JOptionPane.YES_OPTION) {
             JInternalFrame[] childFrames = desktopPane.getAllFrames();
             for (JInternalFrame frame : childFrames) {

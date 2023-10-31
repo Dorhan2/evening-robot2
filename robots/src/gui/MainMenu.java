@@ -118,21 +118,27 @@ public class MainMenu extends JFrame {
         languageMenu.add(languageItem);
         return languageMenu;
     }
-
+    //static JComboBox selectLanguage;
     private void showLanguageDialog() {
+
         JMenuItem selectLanguage;
         String languageSelection;
         selectLanguage = new JMenuItem(getLocalizedString("selectLanguage"));
         languageSelection = new String(getLocalizedString("languageSelection"));
+        String yesButton = new String(getLocalizedString("Yes"));
+        String cancelButton = new String(getLocalizedString("Cancel"));
+
         String[] languages = { "English", "Deutsch" };
-        String[] buttons = { "Ja", "Stornieren" };
-        String selectedLanguage = (String) JOptionPane.showInputDialog(this, selectLanguage, languageSelection, JOptionPane.PLAIN_MESSAGE, null, languages, languages[0]);
-        //String selectedLanguage = (String) JOptionPane.showInputDialog(this, selectLanguage, languageSelection, JOptionPane.YES_NO_OPTION);
+        String[] buttons = {yesButton, cancelButton };
+
+        JComboBox selectedLanguage = new JComboBox(languages);
+        //String selectedLanguage = (String) JOptionPane.showInputDialog(this, selectLanguage, languageSelection, JOptionPane.PLAIN_MESSAGE, null, languages, languages[0]);
+        int menuLanguage = JOptionPane.showOptionDialog(this, selectedLanguage, languageSelection, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,  null, buttons, buttons[0]);
 
 
-        if (selectedLanguage != null) {
-            setLanguage(selectedLanguage);
-            LanguageSettings.setLanguage(selectedLanguage);
+        if (selectedLanguage.getSelectedItem() != null) {
+            setLanguage((String) selectedLanguage.getSelectedItem());
+            LanguageSettings.setLanguage((String) selectedLanguage.getSelectedItem());
         }
     }
 
