@@ -65,7 +65,9 @@ public class MainApplicationFrame extends JFrame {
         gameWindow.setName("gameWindow");
         gameWindow.setSize(400, 400);
         addWindow(gameWindow);
-
+        String yesButton = messages.getString("Yes");
+        String cancelButton = messages.getString("Cancel");
+        String[] buttons = new String[]{yesButton, cancelButton};
         setJMenuBar(MenuBuilder.buildMenuBar(this, messages));
 
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -78,14 +80,14 @@ public class MainApplicationFrame extends JFrame {
         });
 
         if (WindowStateManager.hasSavedWindowState("logWindow")) {
-            int result = JOptionPane.showConfirmDialog(this, messages.getString("restoreWindowStateTitle"), messages.getString("restoreLogWindowStateMessage"), JOptionPane.YES_NO_OPTION);
+            int result = JOptionPane.showOptionDialog(this, messages.getString("restoreWindowStateTitle"), messages.getString("restoreLogWindowStateMessage"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
             if (result == JOptionPane.YES_OPTION) {
                 restoreWindowState("logWindow", logWindow);
             }
         }
 
         if (WindowStateManager.hasSavedWindowState("gameWindow")) {
-            int result = JOptionPane.showConfirmDialog(this, messages.getString("restoreWindowStateTitle"), messages.getString("restoreGameWindowStateMessage"), JOptionPane.YES_NO_OPTION);
+            int result = JOptionPane.showOptionDialog(this, messages.getString("restoreWindowStateTitle"), messages.getString("restoreGameWindowStateMessage"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
             if (result == JOptionPane.YES_OPTION) {
                 restoreWindowState("gameWindow", gameWindow);
             }
