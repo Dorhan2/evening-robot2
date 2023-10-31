@@ -20,6 +20,7 @@ public class MainMenu extends JFrame {
     private JMenuItem languageItem;
     private ResourceBundle resourceBundle;
 
+
     public MainMenu() {
 
 
@@ -66,7 +67,6 @@ public class MainMenu extends JFrame {
 
         setLanguage("English");
         setLanguage(LanguageSettings.getLanguage());
-
 
 
     }
@@ -120,8 +120,12 @@ public class MainMenu extends JFrame {
     }
 
     private void showLanguageDialog() {
+        JMenuItem selectLanguage;
+        String languageSelection;
+        selectLanguage = new JMenuItem(getLocalizedString("selectLanguage"));
+        languageSelection = new String(getLocalizedString("languageSelection"));
         String[] languages = { "English", "Deutsch" };
-        String selectedLanguage = (String) JOptionPane.showInputDialog(this, "Select Language", "Language Selection", JOptionPane.PLAIN_MESSAGE, null, languages, languages[0]);
+        String selectedLanguage = (String) JOptionPane.showInputDialog(this, selectLanguage, languageSelection, JOptionPane.PLAIN_MESSAGE, null, languages, languages[0]);
         if (selectedLanguage != null) {
             setLanguage(selectedLanguage);
             LanguageSettings.setLanguage(selectedLanguage);
@@ -148,6 +152,8 @@ public class MainMenu extends JFrame {
         exitItem.setText(getLocalizedString("exitItem"));
         languageMenu.setText(getLocalizedString("languageMenu"));
         languageItem.setText(getLocalizedString("languageItem"));
+        //selectLanguage.setText(getLocalizedString("selectLanguage"));
+        //languageSelection.setText(getLocalizedString("languageSelection"));
         // Additional updates to text elements
     }
 
